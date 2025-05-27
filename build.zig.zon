@@ -2,10 +2,10 @@
     .name = .zwakfu,
     .version = "0.0.0",
     .fingerprint = 0x84594eee253dc8c4, // Changing this has security and trust implications.
-    .minimum_zig_version = "0.14.0",
+    .minimum_zig_version = "0.15.0-dev",
     .dependencies = .{
         .discordzig = .{
-            .url = "https://github.com/discord-zig/discord.zig/archive/master.tar.gz",
+            .url = "https://github.com/discord-zig/discord.zig/archive/88088e4ae862dcce31bc212eac92b74e803c63f8.tar.gz",
             .hash = "discordzig-1.0.0-KYtlU_JhCADRmIXgmqX5lg8of2_q1C4zFJdhZrZOhZvW",
         },
     },

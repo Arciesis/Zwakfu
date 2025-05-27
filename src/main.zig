@@ -1,6 +1,9 @@
 const std = @import("std");
-const Discord = @import("discord.zig");
+const Discord = @import("discord");
 const Shard = Discord.Shard;
+
+const CACommand = Discord.CreateApplicationCommand;
+const AppCommand = Discord.ApplicationCommand;
 
 var session: *Discord.Session = undefined;
 
@@ -16,6 +19,24 @@ fn message_create(_: *Shard, message: Discord.Message) !void {
         const m = result.value.unwrap();
         std.debug.print("sent: {?s}\n", .{m.content});
     }
+}
+
+const ping_cmd: CACommand = CACommand{
+    .type = Discord.ApplicationCommandTypes.ChatInput,
+    .name = "ping",
+    .version = "0.1.0",
+    .contexts = Discord.InteractionContextType.Guild,
+    .description = "Replies with Pong!",
+    .dm_permission = true,
+    .nsfw = false,
+};
+
+fn ping_command(_: *Shard, message: Discord.MessageInteraction) !void {
+    var res = try session.api.sendMessage(message.id, .{ .content = "Pong!" });
+    defer res.deinit();
+
+    const msg = res.value.unwrap();
+    std.debug.print("sent: {?s}\n", .{msg.content});
 }
 
 pub fn main() !void {
@@ -39,17 +60,13 @@ pub fn main() !void {
         bits.Guilds = true;
         bits.GuildMessages = true;
         bits.GuildMembers = true;
-        // WARNING:
-        // YOU MUST SET THIS ON DEV PORTAL
-        // OTHERWISE THE LIBRARY WILL CRASH
-        // bits.MessageContent = true;
         break :blk bits;
     };
 
     try session.start(.{
         .intents = intents,
         .authorization = token,
-        .run = .{ .message_create = &message_create, .ready = &ready },
+        .run = .{ .message_create = &message_create, .ready = &ready, .interaction_create = &ping_command },
         .log = .yes,
         .options = .{},
         .cache = .defaults(allocator),

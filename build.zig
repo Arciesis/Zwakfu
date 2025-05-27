@@ -18,7 +18,7 @@ pub fn build(b: *std.Build) void {
     });
 
     const dzig = b.dependency("discordzig", .{});
-    exe.root_module.addImport("discord.zig", dzig.module("discord.zig"));
+    exe.root_module.addImport("discord", dzig.module("discord.zig"));
 
     b.installArtifact(exe);
 
